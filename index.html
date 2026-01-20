@@ -1,6 +1,6 @@
 ﻿
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -119,12 +119,15 @@
     }
 
     .hero {
+      position: relative;
+    }
+
+    .hero-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 40px;
       padding: 70px 0 40px;
       align-items: center;
-      position: relative;
     }
 
     .hero::before {
@@ -476,7 +479,11 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     .lang { display: none; }
-    .lang.active { display: block; }
+    html[data-lang="en"] .lang-en { display: block; }
+    html[data-lang="pt"] .lang-pt { display: block; }
+    html[data-lang="es"] .lang-es { display: block; }
+
+    .cta-row.center { justify-content: center; }
 
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
@@ -540,7 +547,7 @@
         <span class="orb two"></span>
         <span class="orb three"></span>
       </div>
-      <div class="container hero">
+      <div class="container hero-grid">
         <div class="hero-content reveal">
           <div class="lang lang-en active">
             <div class="eyebrow">Premium Freelancer for Global Teams</div>
@@ -825,7 +832,7 @@
           <div class="lang lang-en active">
             <h2 class="section-title">Ready to build something reliable and scalable?</h2>
             <p class="section-subtitle">Tell me about your goals and I will propose the fastest, safest path to results.</p>
-            <div class="cta-row" style="justify-content: center;">
+            <div class="cta-row center">
               <a class="btn primary" href="mailto:marcosdossantos43@hotmail.com">Email Me</a>
               <a class="btn secondary" href="https://wa.me/353899799525" target="_blank" rel="noreferrer">WhatsApp</a>
               <a class="btn secondary" href="https://www.upwork.com/freelancers/~0146fd4d5f41e5c89a" target="_blank" rel="noreferrer">Upwork</a>
@@ -834,7 +841,7 @@
           <div class="lang lang-pt">
             <h2 class="section-title">Pronto para construir algo confiável e escalável?</h2>
             <p class="section-subtitle">Conte seus objetivos e eu proponho o caminho mais rápido e seguro para o resultado.</p>
-            <div class="cta-row" style="justify-content: center;">
+            <div class="cta-row center">
               <a class="btn primary" href="mailto:marcosdossantos43@hotmail.com">Enviar Email</a>
               <a class="btn secondary" href="https://wa.me/353899799525" target="_blank" rel="noreferrer">WhatsApp</a>
               <a class="btn secondary" href="https://www.upwork.com/freelancers/~0146fd4d5f41e5c89a" target="_blank" rel="noreferrer">Upwork</a>
@@ -843,7 +850,7 @@
           <div class="lang lang-es">
             <h2 class="section-title">¿Listo para construir algo confiable y escalable?</h2>
             <p class="section-subtitle">Cuéntame tus objetivos y propongo la ruta más rápida y segura al resultado.</p>
-            <div class="cta-row" style="justify-content: center;">
+            <div class="cta-row center">
               <a class="btn primary" href="mailto:marcosdossantos43@hotmail.com">Enviar Email</a>
               <a class="btn secondary" href="https://wa.me/353899799525" target="_blank" rel="noreferrer">WhatsApp</a>
               <a class="btn secondary" href="https://www.upwork.com/freelancers/~0146fd4d5f41e5c89a" target="_blank" rel="noreferrer">Upwork</a>
@@ -907,7 +914,6 @@
 
   <script>
     const langButtons = document.querySelectorAll('.lang-switch button');
-    const langBlocks = document.querySelectorAll('.lang');
     const savedLang = localStorage.getItem('lang');
     const browserLang = navigator.language?.toLowerCase().startsWith('pt')
       ? 'pt'
@@ -916,9 +922,13 @@
         : 'en';
 
     function setLanguage(lang) {
-      langButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
-      langBlocks.forEach(block => block.classList.toggle('active', block.classList.contains(`lang-${lang}`)));
+      langButtons.forEach(btn => {
+        const isActive = btn.dataset.lang === lang;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+      });
       document.documentElement.lang = lang;
+      document.documentElement.dataset.lang = lang;
       localStorage.setItem('lang', lang);
     }
 
